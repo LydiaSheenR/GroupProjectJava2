@@ -1,1 +1,1 @@
-typeSearchIndex = [{"p":"cscc.edu","l":"Config"},{"p":"cscc.edu","l":"ConfigTest"},{"p":"cscc.edu","l":"HTTPRequest"},{"p":"cscc.edu","l":"Main"},{"p":"cscc.edu","l":"RequestHandler"},{"p":"cscc.edu","l":"ResponseHandler"},{"p":"cscc.edu","l":"TinyWS"}]
+typeSearchIndex = [{"p":"cscc.edu","l":"Config"},{"p":"cscc.edu","l":"ConfigTest"},{"p":"cscc.edu","l":"HTTPRequest"},{"p":"cscc.edu","l":"HTTPRequestTest"},{"p":"cscc.edu","l":"Main"},{"p":"cscc.edu","l":"RequestHandler"},{"p":"cscc.edu","l":"ResponseHandler"},{"p":"cscc.edu","l":"TinyWS"}]
