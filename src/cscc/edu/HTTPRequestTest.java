@@ -17,7 +17,10 @@ public class HTTPRequestTest {
     }
 
     @Test
-    public void isValidRequest() {
+    public void isValidRequest1positive() {
+        HTTPRequest httpRequest = new HTTPRequest("GET qwerty");
+        boolean actual = httpRequest.isValidRequest();
+        assertEquals(true, actual);
     }
 
     @Test

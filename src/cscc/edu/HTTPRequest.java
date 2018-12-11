@@ -10,17 +10,18 @@ public class HTTPRequest {
 
     /**
      * instantiating the HTTPRequest class
-     * @param r
+     * @param request
      */
-    public HTTPRequest(String r) {
-       this.request = r;
-       this.validRequest = isValidRequest();
+    public HTTPRequest(String request) {
+       this.request = request;
+       this.validRequest = parse(request);
        this.path = getPath();
+
     }
 
     /**
      * checks if the request is valid
-     * @return
+     * @return validRequest
      */
     public boolean isValidRequest() {
         return (validRequest);
@@ -28,7 +29,7 @@ public class HTTPRequest {
 
     /**
      * returns just the path from the request
-     * @return
+     * @return path
      */
     public String getPath() {
         return (path);
@@ -37,10 +38,10 @@ public class HTTPRequest {
     /**
      * parse the request string and set the path and checks if valid
      * @param r
-     * @return
+     * @return true or false
      */
     private boolean parse(String r) {
-        String arrayR[] = r.split("[\\t\\n]");
+        String arrayR[] = r.split("[\\t\\n\\s]");
         if ((arrayR[0].equals("GET")) && (arrayR[1] != null)){
             this.path = arrayR[1];
             validRequest = true;
