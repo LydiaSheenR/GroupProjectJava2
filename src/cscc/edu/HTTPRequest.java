@@ -52,4 +52,27 @@ public class HTTPRequest {
         //validRequest = false;
         return false;
     }
+
+    public static void log(String s) {
+        System.out.println(s);
+    }
+
+    public static void fatalError(String s) {
+        handleError(s, null, true);
+    }
+
+    public static void fatalError(Exception e) {
+        handleError(null, e, true);
+    }
+
+    public static void handleError(String s, Exception e, boolean isFatal) {
+        if (s != null) {
+            System.out.println(s);
+        }
+        if (e != null) {
+            e.printStackTrace();
+        }
+        if (isFatal) System.exit(-1);
+    }
+
 }
