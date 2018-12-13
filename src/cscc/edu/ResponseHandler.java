@@ -23,10 +23,23 @@ public class ResponseHandler {
 
     private HTTPRequest request;
     private int responseCode;
+    private byte[] content = null;
+    private String mimeType = null;
 
-    public ResponseHandler(HTTPRequest request) {
+    public ResponseHandler(HTTPRequest request) throws IOException {
         this.request = request;
         responseCode = 404;
+        this.content = this.getFile(request.getPath());
+        if (request.isValidRequest()) {
+            if (this.content != null) {
+                this.responseCode = 200;
+            } else {
+                this.responseCode = 404;
+            }
+
+        } else {
+            this.responseCode = 403;
+        }
     }
 
     /**
@@ -37,30 +50,101 @@ public class ResponseHandler {
         int sendbufsize = connection.getSendBufferSize();
         BufferedOutputStream out = new BufferedOutputStream(
                 connection.getOutputStream(), sendbufsize);
-       // TODO code here
+        if (this.responseCode == 200) {
+
+            //HTTP_OK_HEADER.concat(this.getMimeType(request.getPath())) ;
+            String h = HTTP_OK_HEADER + this.mimeType;
+            response = h.getBytes();
+            TinyWS.log(h);
+            out.write(response);
+            for (int i = 0; i < content.length; i++) {
+                //System.out.print((char) content[i]);
+                out.write(content[i]);
+            }
+
+        } else if (this.responseCode == 404) {
+            response = NOT_FOUND_RESPONSE.getBytes();
+            out.write(response);
+        } else if (this.responseCode == 403) {
+            response = FORBIDDEN_RESPONSE.getBytes();
+            out.write(response);
+
+        }
+
+        out.flush();
+        out.close();
 }
 
     // Find requested file, assume Document Root is in html folder in project directory
-    private byte[] getFile(String path) {
-       // TODO code here
+    private byte[] getFile(String path) throws IOException {
+        String mypath = null;
+        File fileobject;
+        if (path.equals("/")) {
+            mypath = TinyWS.getDefaultFolder() + "/" + TinyWS.getDefaultPage();
+        } else {
+            mypath = TinyWS.getDefaultFolder() + path;
+        }
+        //System.out.println(mypath);
+        TinyWS.log(mypath);
+        this.mimeType = getMimeType(mypath);
+        fileobject = new File(mypath);
 
-        // TODO delete next statement
-        return(null);
+        return readFile(fileobject);
     }
 
     // Read file, return byte array (null if error)
-    private byte[] readFile(File f) {
-        // TODO code here
+    private byte[] readFile(File f) throws IOException {
+        byte[] bFile = null;
+        try {
+            if (f.exists() && f.isFile()) {
 
-        // TODO delete next statement
-        return(null);
+                //fileContent = Files.readAllBytes(f.toPath());
+                //System.out.println(fileContent.toString());
+
+                FileInputStream fileInputStream = null;
+                bFile = new byte[(int) f.length()];
+                fileInputStream = new FileInputStream(f);
+                fileInputStream.read(bFile);
+                fileInputStream.close();
+                //for (int i = 0; i < bFile.length; i++)
+                //{
+                // System.out.print((char) bFile[i]);
+                //}
+            }
+        } catch (FileNotFoundException e) {
+            TinyWS.fatalError(e);
+
+        } catch (IOException e) {
+            TinyWS.fatalError(e);
+        }
+        return bFile;
     }
 
     // Return mimetype based on file suffix (or null if error)
     private String getMimeType(String path) {
-        String mimeType = null;
 
-        // TODO code here
+        String mimeType = null;
+        String extension = "";
+
+        int i = path.lastIndexOf('.');
+        if (i >= 0) {
+            extension = path.substring(i + 1);
+        }
+        TinyWS.log("File extention: " + extension);
+        if (extension.equals("html")) {
+            mimeType = "text/html\n\n";
+        } else if (extension.equals("txt")) {
+            mimeType = "text/plain\n\n";
+        } else if (extension.equals("java")) {
+            mimeType = "text/plain\n\n";
+        } else if (extension.equals("gif")) {
+            mimeType = "image/gif\n\n";
+        } else if (extension.equals("jpg")) {
+            mimeType = "image/jpeg\n\n";
+        } else if (extension.equals("ico")) {
+            mimeType = "image/png\n\n";
+        }
+
 
         return mimeType;
     }

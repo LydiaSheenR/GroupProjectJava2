@@ -1,8 +1,13 @@
 package cscc.edu;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  * TinyWS a simplistic Tiny Web Server
- * @author student name here
+ * @author Lydiasheen Rhymond & Visalakshi(Vidya) Rajesh
  */
 public class TinyWS {
 
@@ -10,7 +15,7 @@ public class TinyWS {
     private static String defaultFolder;
     private static String defaultPage;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         TinyWS tiny = new TinyWS();
         tiny.listen();
     }
@@ -27,13 +32,45 @@ public class TinyWS {
         TinyWS.defaultPage = defaultPage;
     }
 
-    public TinyWS() {
-       // TODO Constructor code here
+    public TinyWS() throws IOException {
 
+        Config conf = new Config();
+        port = Integer.parseInt(conf.getProperty(Config.PORT));
+        defaultFolder = conf.getProperty(Config.DEFAULTFOLDER);
+        defaultPage = conf.getProperty(Config.DEFAULTPAGE);
     }
 
-    public void listen() {
-       // TODO add code here
+    public void listen() throws IOException {
+        ServerSocket serverSocket = new ServerSocket(port);
+
+
+        log(serverSocket.getInetAddress() + " connected to server.\n");
+
+        try {
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+
+                try {
+
+                    InetAddress client = clientSocket.getInetAddress();
+                    log(client.getHostName() + " connected to client.\n");
+                    RequestHandler requesthandler = new RequestHandler(clientSocket);
+                    HTTPRequest httprequest = new HTTPRequest(requesthandler.processRequest());
+                    log(httprequest.toString());
+                    log(httprequest.getPath());
+                    ResponseHandler reqh = new ResponseHandler(httprequest);
+
+                    reqh.sendResponse(clientSocket);
+
+
+                } finally {
+                    clientSocket.close();
+                }
+            }
+        } finally {
+            serverSocket.close();
+        }
+
     }
 
     /**

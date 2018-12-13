@@ -10,8 +10,8 @@ public class RequestHandler {
         this.connection = connection;
     }
 
-    public void processRequest() {
-        // TODO code here
+    public String processRequest() throws IOException {
+        return this.readRequest();
     }
 
     private String readRequest() throws IOException {
@@ -20,9 +20,18 @@ public class RequestHandler {
         int recbufsize = connection.getReceiveBufferSize();
         InputStream in = connection.getInputStream();
 
-        // TODO add code here
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+        String inputline;
+        StringBuilder request = new StringBuilder();
+        while ((inputline = bufferedReader.readLine()) != null) {
+            request.append(inputline);
+        }
+        bufferedReader.close();
 
-        // TODO - detete following statement
-        return(null);
+        //String text = bufferedReader.readLine().toString();
+
+
+        return request.toString();
+
     }
 }

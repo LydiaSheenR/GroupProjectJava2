@@ -41,13 +41,14 @@ public class HTTPRequest {
      * @return true or false
      */
     private boolean parse(String r) {
-        String arrayR[] = r.split("[\\t\\n\\s]");
-        if ((arrayR[0].equals("GET")) && (arrayR[1] != null)){
+        String arrayR[] = r.split("[\t\n?]");
+        int tokens = arrayR.length;
+        if ((arrayR[0].equalsIgnoreCase("GET")) && (arrayR[1] != null) && (tokens == 3)) {
             this.path = arrayR[1];
-            validRequest = true;
+            //validRequest = true;
             return true;
         }
-        validRequest = false;
+        //validRequest = false;
         return false;
     }
 }

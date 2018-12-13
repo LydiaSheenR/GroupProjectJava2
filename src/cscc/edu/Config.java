@@ -9,7 +9,7 @@ import java.util.Properties;
 
 /**
  * Process webserver configuration
- * @author Lydiasheen Rhymond
+ * @author Lydiasheen Rhymond & Visalakshi(Vidya) Rajesh
  */
 public class Config {
     public static final String PORT = "port";
@@ -20,9 +20,10 @@ public class Config {
 
     /**
      * Instantiating the config class
+     * @throws IOException
      */
-    public Config() {
-        // TODO code here
+    public Config() throws IOException {
+        readProperties();
     }
 
     /**
@@ -31,7 +32,7 @@ public class Config {
      */
     public void readProperties() throws IOException {
         try {
-            File file = new File("C:\\Users\\lydiasheenrhymond\\IdeaProjects\\GroupProjectJava2\\src\\cscc\\edu\\TinyWS.xml");
+            File file = new File(CONFIG_FILE);
             FileInputStream fileInput = new FileInputStream(file);
             Properties properties = new Properties();
             properties.loadFromXML(fileInput);
