@@ -7,7 +7,8 @@ public class Main {
         try {
             Config config = new Config();
             config.readProperties();
-            System.out.println(config.getProperty("port"));
+            config.dumpProperties();
+            //System.out.println(config.getProperty("port"));
         } catch (Exception e){
             System.out.println("trace: " + e.getStackTrace());
             System.out.println("cause: " + e.getCause());

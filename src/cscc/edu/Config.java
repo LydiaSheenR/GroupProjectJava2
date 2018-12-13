@@ -15,7 +15,7 @@ public class Config {
     public static final String PORT = "port";
     public static final String DEFAULTPAGE = "defaultPage";
     public static final String DEFAULTFOLDER = "defaultFolder";
-    private static final String CONFIG_FILE = "cscc/edu/TinyWS.xml";
+    private static final String CONFIG_FILE = "./TinyWS.xml";
     private static Properties properties;
 
     /**
@@ -34,7 +34,7 @@ public class Config {
         try {
             File file = new File(CONFIG_FILE);
             FileInputStream fileInput = new FileInputStream(file);
-            Properties properties = new Properties();
+            properties = new Properties();
             properties.loadFromXML(fileInput);
             fileInput.close();
         } catch (FileNotFoundException e) {

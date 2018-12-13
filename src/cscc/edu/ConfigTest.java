@@ -2,17 +2,30 @@ package cscc.edu;
 
 import static org.junit.Assert.*;
 
+import org.junit.Test;
+
+import java.io.IOException;
+
 public class ConfigTest {
 
-    @org.junit.Test
-    public void readProperties() {
+    @Test
+    public void getPropertyDefaultPage() throws IOException {
+        Config config = new Config();
+        String actual = config.getProperty("defaultPage");
+        assertEquals("index.html", actual);
     }
 
-    @org.junit.Test
-    public void getProperty() {
+    @Test
+    public void getPropertyPort() throws IOException {
+        Config config = new Config();
+        String actual = config.getProperty("port");
+        assertEquals("80", actual);
     }
 
-    @org.junit.Test
-    public void dumpProperties() {
+    @Test
+    public void getPropertyDefaultFolder() throws IOException {
+        Config config = new Config();
+        String actual = config.getProperty("defaultFolder");
+        assertEquals("./html", actual);
     }
 }

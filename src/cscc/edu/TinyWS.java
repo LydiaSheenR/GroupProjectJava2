@@ -42,33 +42,29 @@ public class TinyWS {
 
     public void listen() throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
-
-
+        serverSocket.setSoTimeout(0);
         log(serverSocket.getInetAddress() + " connected to server.\n");
 
-        try {
+        //  try {
             while (true) {
-                Socket clientSocket = serverSocket.accept();
-
                 try {
-
-                    InetAddress client = clientSocket.getInetAddress();
-                    log(client.getHostName() + " connected to client.\n");
+                    Socket clientSocket = serverSocket.accept();
+                    log(clientSocket.getInetAddress().getCanonicalHostName());
+                    //InetAddress client = clientSocket.getInetAddress();
+                    //log(client.getHostName() + " connected to client.\n");
                     RequestHandler requesthandler = new RequestHandler(clientSocket);
-                    HTTPRequest httprequest = new HTTPRequest(requesthandler.processRequest());
-                    log(httprequest.toString());
-                    log(httprequest.getPath());
-                    ResponseHandler reqh = new ResponseHandler(httprequest);
+                    //   HTTPRequest httprequest = new HTTPRequest(requesthandler.processRequest());
+                    // log(httprequest.toString());
+                    // log(httprequest.getPath());
+                    requesthandler.processRequest();
+                    // ResponseHandler reqh = new ResponseHandler(httprequest);
 
-                    reqh.sendResponse(clientSocket);
-
-
-                } finally {
+                    //reqh.sendResponse(clientSocket);
                     clientSocket.close();
+
+                } catch (IOException e) {
+                    throw new RuntimeException("Some Error" + port, e);
                 }
-            }
-        } finally {
-            serverSocket.close();
         }
 
     }
