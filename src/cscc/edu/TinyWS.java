@@ -34,10 +34,10 @@ public class TinyWS {
 
     public TinyWS() throws IOException {
 
-        Config conf = new Config();
-        port = Integer.parseInt(conf.getProperty(Config.PORT));
-        defaultFolder = conf.getProperty(Config.DEFAULTFOLDER);
-        defaultPage = conf.getProperty(Config.DEFAULTPAGE);
+        Config config = new Config();
+        port = Integer.parseInt(config.getProperty(Config.PORT));
+        defaultFolder = config.getProperty(Config.DEFAULTFOLDER);
+        defaultPage = config.getProperty(Config.DEFAULTPAGE);
     }
 
     public void listen() throws IOException {
@@ -48,19 +48,19 @@ public class TinyWS {
         //  try {
             while (true) {
                 try {
-                    Socket clientSocket = serverSocket.accept();
-                    log(clientSocket.getInetAddress().getCanonicalHostName());
-                    //InetAddress client = clientSocket.getInetAddress();
+                    Socket connection = serverSocket.accept();
+                    log(connection.getInetAddress().getCanonicalHostName());
+                    //InetAddress client = connection.getInetAddress();
                     //log(client.getHostName() + " connected to client.\n");
-                    RequestHandler requesthandler = new RequestHandler(clientSocket);
-                    //   HTTPRequest httprequest = new HTTPRequest(requesthandler.processRequest());
+                    RequestHandler requesthandler = new RequestHandler(connection);
+
                     // log(httprequest.toString());
                     // log(httprequest.getPath());
                     requesthandler.processRequest();
-                    // ResponseHandler reqh = new ResponseHandler(httprequest);
+                    //
 
-                    //reqh.sendResponse(clientSocket);
-                    clientSocket.close();
+                    //reqh.sendResponse(connection);
+                    connection.close();
 
                 } catch (IOException e) {
                     throw new RuntimeException("Some Error" + port, e);

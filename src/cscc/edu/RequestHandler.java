@@ -11,7 +11,10 @@ public class RequestHandler {
     }
 
     public void processRequest() throws IOException {
+        System.out.println("Got a request");
         String request = readRequest();
+        HTTPRequest httprequest = new HTTPRequest(request);
+        ResponseHandler responseHandler = new ResponseHandler(httprequest);
     }
 
     private String readRequest() throws IOException {
@@ -28,10 +31,10 @@ public class RequestHandler {
 //        }
 //        bufferedReader.close();
 
-        String request = bufferedReader.readLine().toString();
+        String request = bufferedReader.readLine();
 
 
-        return request.toString();
+        return request;
 
     }
 
