@@ -6,6 +6,12 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+/**
+ * Test class for Config class
+ *
+ * @author Lydiasheen Rhymond
+ * @author Visalakshi(Vidya) Rajesh
+ */
 public class ConfigTest {
 
     @Test

@@ -9,7 +9,8 @@ import java.util.Properties;
 
 /**
  * Process webserver configuration
- * @author Lydiasheen Rhymond & Visalakshi(Vidya) Rajesh
+ * @author Lydiasheen Rhymond
+ * @author Visalakshi(Vidya) Rajesh
  */
 public class Config {
     public static final String PORT = "port";
@@ -20,7 +21,7 @@ public class Config {
 
     /**
      * Instantiating the config class
-     * @throws IOException
+     * @throws IOException - throws IO exception
      */
     public Config() throws IOException {
         readProperties();
@@ -29,7 +30,7 @@ public class Config {
 
     /**
      * method to read properties
-     * @throws IOException
+     * @throws IOException - throws IO exception
      */
     public void readProperties() throws IOException {
         try {
@@ -49,8 +50,8 @@ public class Config {
 
     /**
      * method to return property of key
-     * @param key
-     * @return
+     * @param key -key is passed to the method
+     * @return - the value for the key that was passed is returned
      */
     public String getProperty(String key) {
         return properties.getProperty(key);
@@ -68,26 +69,5 @@ public class Config {
         }
     }
 
-    public static void log(String s) {
-        System.out.println(s);
-    }
-
-    public static void fatalError(String s) {
-        handleError(s, null, true);
-    }
-
-    public static void fatalError(Exception e) {
-        handleError(null, e, true);
-    }
-
-    public static void handleError(String s, Exception e, boolean isFatal) {
-        if (s != null) {
-            System.out.println(s);
-        }
-        if (e != null) {
-            e.printStackTrace();
-        }
-        if (isFatal) System.exit(-1);
-    }
 
 }

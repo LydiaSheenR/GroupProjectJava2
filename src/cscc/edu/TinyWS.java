@@ -7,7 +7,8 @@ import java.net.Socket;
 
 /**
  * TinyWS a simplistic Tiny Web Server
- * @author Lydiasheen Rhymond & Visalakshi(Vidya) Rajesh
+ * @author Lydiasheen Rhymond
+ * @author Visalakshi(Vidya) Rajesh
  */
 public class TinyWS {
 
@@ -32,41 +33,38 @@ public class TinyWS {
         TinyWS.defaultPage = defaultPage;
     }
 
+    /**
+     * Constructor
+     *
+     * @throws IOException - throws IO exception
+     */
     public TinyWS() throws IOException {
-
         Config config = new Config();
         port = Integer.parseInt(config.getProperty(Config.PORT));
         defaultFolder = config.getProperty(Config.DEFAULTFOLDER);
         defaultPage = config.getProperty(Config.DEFAULTPAGE);
     }
 
+    /**
+     * Listen Method
+     * @throws IOException - throws IO exception
+     */
     public void listen() throws IOException {
         ServerSocket serverSocket = new ServerSocket(port);
         serverSocket.setSoTimeout(0);
         log(serverSocket.getInetAddress() + " connected to server.\n");
+        while (true) {
+            try {
+                Socket connection = serverSocket.accept();
+                log(connection.getInetAddress().getCanonicalHostName());
+                RequestHandler requesthandler = new RequestHandler(connection);
+                requesthandler.processRequest();
+                connection.close();
 
-        //  try {
-            while (true) {
-                try {
-                    Socket connection = serverSocket.accept();
-                    log(connection.getInetAddress().getCanonicalHostName());
-                    //InetAddress client = connection.getInetAddress();
-                    //log(client.getHostName() + " connected to client.\n");
-                    RequestHandler requesthandler = new RequestHandler(connection);
-
-                    // log(httprequest.toString());
-                    // log(httprequest.getPath());
-                    requesthandler.processRequest();
-                    //
-
-                    //reqh.sendResponse(connection);
-                    connection.close();
-
-                } catch (IOException e) {
-                    throw new RuntimeException("Some Error" + port, e);
-                }
+            } catch (IOException e) {
+                throw new RuntimeException("Some Error" + port, e);
+            }
         }
-
     }
 
     /**
@@ -79,6 +77,7 @@ public class TinyWS {
 
     /**
      * Handle fatal error - print info and die
+     * @param s - message to log
      */
     public static void fatalError(String s) {
         handleError(s, null, true);
@@ -86,6 +85,7 @@ public class TinyWS {
 
     /**
      * Handle fatal error - print info and die
+     * @param e - message to log exception
      */
     public static void fatalError(Exception e) {
         handleError(null, e, true);
@@ -93,6 +93,9 @@ public class TinyWS {
 
     /**
      * Handle fatal / non-fatal errors
+     * @param e - message to log exception
+     * @param s - message to log
+     * @param isFatal - message to log fatal error
      */
     public static void handleError(String s, Exception e, boolean isFatal) {
         if (s != null) {

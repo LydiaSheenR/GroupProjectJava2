@@ -3,6 +3,12 @@ package cscc.edu;
 import java.io.*;
 import java.net.*;
 
+/**
+ * response handler method
+ *
+ * @author Lydiasheen Rhymond
+ * @author Visalakshi(Vidya) Rajesh
+ */
 public class ResponseHandler {
     private static final String NOT_FOUND_RESPONSE =
             "HTTP/1.0 404 NotFound\n" +
@@ -23,9 +29,14 @@ public class ResponseHandler {
 
     private HTTPRequest request;
     private int responseCode;
-    private byte[] content = null;
+    private byte[] content;
     private String mimeType = null;
 
+    /**
+     * constructor
+     * @param request - HTTP request
+     * @throws IOException - throws IO exception
+     */
     public ResponseHandler(HTTPRequest request) throws IOException {
         this.request = request;
         responseCode = 404;
@@ -44,6 +55,8 @@ public class ResponseHandler {
 
     /**
      * Send HTTP Response
+     * @param connection - socket connection
+     * @throws IOException - throws IO exception
      */
     public void sendResponse(Socket connection) throws IOException {
         byte[] response = null;
@@ -73,9 +86,14 @@ public class ResponseHandler {
 
         out.flush();
         out.close();
-}
+    }
 
-    // Find requested file, assume Document Root is in html folder in project directory
+    /**
+     * Find requested file
+     * @param path - path from request
+     * @return - the file object
+     * @throws IOException throws IO exception
+     */
     private byte[] getFile(String path) throws IOException {
         String mypath = null;
         File fileobject;
@@ -84,7 +102,7 @@ public class ResponseHandler {
         } else {
             mypath = TinyWS.getDefaultFolder() + path;
         }
-        //System.out.println(mypath);
+
         TinyWS.log(mypath);
         this.mimeType = getMimeType(mypath);
         fileobject = new File(mypath);
@@ -92,35 +110,32 @@ public class ResponseHandler {
         return readFile(fileobject);
     }
 
-    // Read file, return byte array (null if error)
+    /**
+     * @param f -Read file
+     * @return - return byte array
+     * @throws IOException throws IO exception
+     */
     private byte[] readFile(File f) throws IOException {
         byte[] bFile = null;
         try {
             if (f.exists() && f.isFile()) {
-
-                //fileContent = Files.readAllBytes(f.toPath());
-                //System.out.println(fileContent.toString());
 
                 FileInputStream fileInputStream = null;
                 bFile = new byte[(int) f.length()];
                 fileInputStream = new FileInputStream(f);
                 fileInputStream.read(bFile);
                 fileInputStream.close();
-                //for (int i = 0; i < bFile.length; i++)
-                //{
-                // System.out.print((char) bFile[i]);
-                //}
             }
-        } catch (FileNotFoundException e) {
-            TinyWS.fatalError(e);
-
         } catch (IOException e) {
             TinyWS.fatalError(e);
         }
         return bFile;
     }
 
-    // Return mimetype based on file suffix (or null if error)
+    /**
+     * @param path - the path from the request
+     * @return - Return mimetype based on file suffix (or null if error)
+     */
     private String getMimeType(String path) {
 
         String mimeType = null;
@@ -144,31 +159,7 @@ public class ResponseHandler {
         } else if (extension.equals("ico")) {
             mimeType = "image/png\n\n";
         }
-
-
         return mimeType;
-    }
-
-    public static void log(String s) {
-        System.out.println(s);
-    }
-
-    public static void fatalError(String s) {
-        handleError(s, null, true);
-    }
-
-    public static void fatalError(Exception e) {
-        handleError(null, e, true);
-    }
-
-    public static void handleError(String s, Exception e, boolean isFatal) {
-        if (s != null) {
-            System.out.println(s);
-        }
-        if (e != null) {
-            e.printStackTrace();
-        }
-        if (isFatal) System.exit(-1);
     }
 
 }
